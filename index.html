@@ -76,6 +76,12 @@
     margin-bottom: 12px;
   }
 
+  .legend-phase-list { display: flex; flex-direction: column; gap: 9px; }
+  .legend-phase-item { display: flex; align-items: center; gap: 9px; font-size: 12.5px; font-weight: 600; color: #333; }
+  .legend-phase-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+  .legend-status-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 13px; padding-top: 11px; border-top: 1px solid #eee; }
+  .legend-status-note { font-size: 10px; color: #aaa; margin-top: 9px; }
+
   .legend-grid {
     display: grid;
     grid-template-columns: auto auto auto;
@@ -798,6 +804,8 @@
   [data-theme="dark"] .legend-grid .lg-header { color: #555552; border-bottom-color: #2e2e2e; }
   [data-theme="dark"] .legend-grid .lg-label { color: #666662; }
   [data-theme="dark"] .legend-grid .lg-status { color: #555552; }
+  [data-theme="dark"] .legend-phase-item { color: #cfcfca; }
+  [data-theme="dark"] .legend-status-row { border-top-color: #2e2e2e; }
 
   /* Legend not-started state in dark */
   [data-theme="dark"] .status-pill.not-started {
@@ -960,9 +968,96 @@
   [data-theme="dark"] .rings-overall-pct { color: #e8e8e4; }
   [data-theme="dark"] .rings-overall-label { color: #484844; }
   [data-theme="dark"] .rings-legend-item { color: #555552; }
+
+  /* ── Phase checklist ─────────────────────────────── */
+  .check-list { list-style: none; margin: 12px 0 0; padding: 0; }
+  .check-item {
+    display: flex; align-items: flex-start; gap: 9px;
+    font-size: 12px; color: #555; line-height: 1.5;
+    padding: 5px 0;
+  }
+  .check-item input.phase-check { position: absolute; opacity: 0; width: 0; height: 0; }
+  .check-item .check-box {
+    flex: 0 0 auto; width: 16px; height: 16px; margin-top: 1px;
+    border: 1.5px solid #c8c8c2; border-radius: 4px; background: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .check-item .check-box::after {
+    content: "✓"; font-size: 11px; font-weight: 700; color: #fff;
+    transform: scale(0); transition: transform 0.15s ease;
+  }
+  .check-item input.phase-check:checked + .check-box {
+    background: #10b981; border-color: #10b981;
+  }
+  .check-item input.phase-check:checked + .check-box::after { transform: scale(1); }
+  .check-item input.phase-check:checked ~ .check-label {
+    color: #9a9a95; text-decoration: line-through;
+  }
+  /* clickable only in edit mode */
+  body.edit-mode .check-item { cursor: pointer; }
+  body.edit-mode .check-item:hover .check-box { border-color: #10b981; }
+  .check-item input.phase-check:focus-visible + .check-box { outline: 2px solid #6366f1; outline-offset: 2px; }
+
+  /* ── Per-phase progress bar ──────────────────────── */
+  .phase-progress { margin-top: 14px; }
+  .phase-progress-head {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em;
+    color: #999; margin-bottom: 5px;
+  }
+  .phase-progress-track {
+    height: 7px; border-radius: 4px; background: #ececec; overflow: hidden;
+  }
+  .phase-progress-fill {
+    height: 100%; width: 0; border-radius: 4px;
+    background: linear-gradient(90deg, #10b981, #059669);
+    transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  /* Phase-colored bars: P1 emerald, P2 blue, P3 amber (matches overall widget) */
+  [data-phase="2"] .phase-progress-fill { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+  [data-phase="3"] .phase-progress-fill { background: linear-gradient(90deg, #f59e0b, #d97706); }
+
+  /* ── Edit-mode banner ────────────────────────────── */
+  .edit-banner {
+    display: none; position: sticky; top: 0; z-index: 50;
+    background: #0d2e3f; color: #eaf6fb;
+    font-size: 12px; line-height: 1.5;
+    padding: 10px 18px; border-radius: 0 0 10px 10px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+    align-items: center; gap: 14px; flex-wrap: wrap;
+    max-width: 1100px; margin: 0 auto;
+  }
+  body.edit-mode .edit-banner { display: flex; }
+  .edit-banner strong { color: #fff; }
+  .edit-banner .eb-badge {
+    background: #10b981; color: #04241a; font-weight: 700;
+    padding: 2px 8px; border-radius: 999px; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .edit-banner button {
+    margin-left: auto; background: #10b981; color: #04241a; border: none;
+    font-weight: 700; font-size: 11px; padding: 6px 12px; border-radius: 6px;
+    cursor: pointer; transition: background 0.15s ease;
+  }
+  .edit-banner button:hover { background: #34d399; }
+
+  [data-theme="dark"] .check-item { color: #888; }
+  [data-theme="dark"] .check-item .check-box { background: #1a1a1a; border-color: #3a3a3a; }
+  [data-theme="dark"] .phase-progress-track { background: #222; }
+  [data-theme="dark"] .check-item input.phase-check:checked ~ .check-label { color: #5a5a56; }
 </style>
 </head>
 <body>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- EDIT-MODE BANNER (only visible with #edit in URL) -->
+<!-- ═══════════════════════════════════════ -->
+<div class="edit-banner" id="editBanner">
+  <span class="eb-badge">Edit mode</span>
+  <span><strong>You can tick milestone checkboxes.</strong> Changes are saved to this browser only. To publish to the client, click Copy progress and send it to Claude to commit.</span>
+  <button type="button" id="copyProgressBtn">Copy progress</button>
+</div>
 
 <!-- ═══════════════════════════════════════ -->
 <!-- HEADER -->
@@ -972,8 +1067,8 @@
   <div class="header-left">
     <p class="sitemap-title">Slice Beer Co</p>
     <h1 class="sitemap-subtitle">Sitemap &amp; Project Status Tracker</h1>
-    <p class="sitemap-date">Last updated: June 19, 2026</p>
-    <p class="sitemap-update">↳ Meta titles/descriptions optimized (de-duped catering, geo + CTA tuning)</p>
+    <p class="sitemap-date">Last updated: August 27, 2026</p>
+    <p class="sitemap-update">↳ Reworked to phase + milestone checklist system (mapped to the proposal)</p>
   </div>
 
 
@@ -984,49 +1079,18 @@
 
   <div class="legend-box">
     <div class="legend-box-title">Status Indicators</div>
-    <div class="legend-grid">
-      <!-- Headers -->
-      <div class="lg-header">Category</div>
-      <div class="lg-header">In Progress</div>
-      <div class="lg-header">Completed</div>
-
-      <!-- Design -->
-      <div class="lg-label"><span class="dot dot-design"></span> Design</div>
-      <div class="lg-status"><span class="status-pill not-started design" style="margin:0;"><span class="pill-icon">○</span> Design</span></div>
-      <div class="lg-status"><span class="status-pill completed design" style="margin:0;"><span class="pill-icon">✓</span> Design</span></div>
-
-      <!-- Development -->
-      <div class="lg-label"><span class="dot dot-dev"></span> Development</div>
-      <div class="lg-status"><span class="status-pill not-started dev" style="margin:0;"><span class="pill-icon">○</span> Dev</span></div>
-      <div class="lg-status"><span class="status-pill completed dev" style="margin:0;"><span class="pill-icon">✓</span> Dev</span></div>
-
-      <!-- SEO -->
-      <div class="lg-label"><span class="dot dot-seo"></span> SEO</div>
-      <div class="lg-status"><span class="status-pill not-started seo-tag" style="margin:0;"><span class="pill-icon">○</span> SEO</span></div>
-      <div class="lg-status"><span class="status-pill completed seo-tag" style="margin:0;"><span class="pill-icon">✓</span> SEO</span></div>
-
-      <!-- Content Input -->
-      <div class="lg-label"><span class="dot dot-content"></span> Content Input</div>
-      <div class="lg-status"><span class="status-pill not-started content" style="margin:0;"><span class="pill-icon">○</span> Content</span></div>
-      <div class="lg-status"><span class="status-pill completed content" style="margin:0;"><span class="pill-icon">✓</span> Content</span></div>
-
-      <!-- Sanity Dev -->
-      <div class="lg-label"><span class="dot dot-sanity"></span> Sanity Dev</div>
-      <div class="lg-status"><span class="status-pill not-started sanity" style="margin:0;"><span class="pill-icon">○</span> Sanity</span></div>
-      <div class="lg-status"><span class="status-pill completed sanity" style="margin:0;"><span class="pill-icon">✓</span> Sanity</span></div>
-
-      <!-- Content Created -->
-      <div class="lg-label"><span class="dot dot-content-created"></span> Content Created</div>
-      <div class="lg-status"><span class="status-pill not-started content-created" style="margin:0;"><span class="pill-icon">○</span> Created</span></div>
-      <div class="lg-status"><span class="status-pill completed content-created" style="margin:0;"><span class="pill-icon">✓</span> Created</span></div>
+    <div class="legend-phase-list">
+      <div class="legend-phase-item"><span class="legend-phase-dot" style="background:#10b981"></span> Phase 1</div>
+      <div class="legend-phase-item"><span class="legend-phase-dot" style="background:#3b82f6"></span> Phase 2</div>
+      <div class="legend-phase-item"><span class="legend-phase-dot" style="background:#f59e0b"></span> Phase 3</div>
     </div>
 
-    <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #eee;">
-      <div class="lg-status" style="font-size: 10px; color: #aaa;">
-        <span class="status-pill not-started" style="margin:0;"><span class="pill-icon">○</span> Not Started</span>
-        <span style="margin-left: 4px;">= default state</span>
-      </div>
+    <div class="legend-status-row">
+      <span class="status-pill not-started" style="margin:0;"><span class="pill-icon">○</span> Not Started</span>
+      <span class="status-pill in-progress" style="margin:0;"><span class="pill-icon">◐</span> In Progress</span>
+      <span class="status-pill completed" style="margin:0;"><span class="pill-icon">✓</span> Completed</span>
     </div>
+    <div class="legend-status-note">Applies to each phase and its milestones.</div>
   </div>
 </div>
 
@@ -1037,80 +1101,146 @@
 <div class="progress-summary">
   <div class="progress-bars-col">
   <div class="progress-summary-title">Overall Project Progress</div>
+  <div style="font-size: 11px; color: #999; margin: -6px 0 14px;">Each bar shows progress <strong>within that phase</strong>. The wheel shows <strong>overall project completion</strong> (phases weighted by length), so early on it reads lower than any single phase's bar.</div>
 
   <div class="progress-row">
-    <div class="progress-label"><span class="dot dot-design"></span> Design</div>
-    <div class="progress-track"><div class="progress-fill design" style="width: 0%;" data-target="0%"></div></div>
-    <div class="progress-pct">0%</div>
+    <div class="progress-label"><span class="dot" style="background:#10b981"></span> Phase 1</div>
+    <div class="progress-track"><div class="progress-fill obar" id="obar-1" style="width: 0%; background:#10b981;"></div></div>
+    <div class="progress-pct" id="opct-1">0%</div>
   </div>
 
   <div class="progress-row">
-    <div class="progress-label"><span class="dot dot-dev"></span> Development</div>
-    <div class="progress-track"><div class="progress-fill dev" style="width: 0%;" data-target="0%"></div></div>
-    <div class="progress-pct">0%</div>
+    <div class="progress-label"><span class="dot" style="background:#3b82f6"></span> Phase 2</div>
+    <div class="progress-track"><div class="progress-fill obar" id="obar-2" style="width: 0%; background:#3b82f6;"></div></div>
+    <div class="progress-pct" id="opct-2">0%</div>
   </div>
 
   <div class="progress-row">
-    <div class="progress-label"><span class="dot dot-seo"></span> SEO</div>
-    <div class="progress-track"><div class="progress-fill seo-tag" style="width: 100%;" data-target="100%"></div></div>
-    <div class="progress-pct">100%</div>
-  </div>
-
-  <div class="progress-row">
-    <div class="progress-label"><span class="dot dot-content"></span> Content Input</div>
-    <div class="progress-track"><div class="progress-fill content" style="width: 0%;" data-target="0%"></div></div>
-    <div class="progress-pct">0%</div>
-  </div>
-
-  <div class="progress-row">
-    <div class="progress-label"><span class="dot dot-sanity"></span> Sanity Dev</div>
-    <div class="progress-track"><div class="progress-fill sanity" style="width: 0%;" data-target="0%"></div></div>
-    <div class="progress-pct">0%</div>
-  </div>
-
-  <div class="progress-row">
-    <div class="progress-label"><span class="dot dot-content-created"></span> Content Created</div>
-    <div class="progress-track"><div class="progress-fill content-created" style="width: 0%;" data-target="0%"></div></div>
-    <div class="progress-pct">0%</div>
+    <div class="progress-label"><span class="dot" style="background:#f59e0b"></span> Phase 3</div>
+    <div class="progress-track"><div class="progress-fill obar" id="obar-3" style="width: 0%; background:#f59e0b;"></div></div>
+    <div class="progress-pct" id="opct-3">0%</div>
   </div>
   </div>
   <div class="rings-chart-wrap">
     <div class="rings-main">
       <div class="rings-side-label">
         <span class="rings-overall-pct" id="pieOverallPct">0%</span>
-        <span class="rings-overall-label">Overall</span>
+        <span class="rings-overall-label">of whole<br>project</span>
       </div>
       <div class="rings-svg-container">
         <svg viewBox="0 0 160 160" width="160" height="160" xmlns="http://www.w3.org/2000/svg">
-          <circle class="ring-bg" cx="80" cy="80" r="15"/>
-          <circle class="ring-bg" cx="80" cy="80" r="25"/>
-          <circle class="ring-bg" cx="80" cy="80" r="35"/>
-          <circle class="ring-bg" cx="80" cy="80" r="45"/>
-          <circle class="ring-bg" cx="80" cy="80" r="55"/>
-          <circle class="ring-bg" cx="80" cy="80" r="65"/>
-          <circle id="ring-design"  class="ring-fill" cx="80" cy="80" r="15" stroke="#6366f1"/>
-          <circle id="ring-dev"     class="ring-fill" cx="80" cy="80" r="25" stroke="#f59e0b"/>
-          <circle id="ring-seo"     class="ring-fill" cx="80" cy="80" r="35" stroke="#10b981"/>
-          <circle id="ring-content" class="ring-fill" cx="80" cy="80" r="45" stroke="#ef4444"/>
-          <circle id="ring-sanity"  class="ring-fill" cx="80" cy="80" r="55" stroke="#8b5cf6"/>
-          <circle id="ring-created" class="ring-fill" cx="80" cy="80" r="65" stroke="#0ea5e9"/>
+          <circle class="ring-bg" cx="80" cy="80" r="60"/>
+          <circle class="ring-bg" cx="80" cy="80" r="46"/>
+          <circle class="ring-bg" cx="80" cy="80" r="32"/>
+          <circle id="oring-1" class="ring-fill" cx="80" cy="80" r="60" stroke="#10b981"/>
+          <circle id="oring-2" class="ring-fill" cx="80" cy="80" r="46" stroke="#3b82f6"/>
+          <circle id="oring-3" class="ring-fill" cx="80" cy="80" r="32" stroke="#f59e0b"/>
         </svg>
       </div>
     </div>
-    <div class="rings-legend">
-      <div class="rings-legend-item"><span class="rings-legend-dot" style="background:#6366f1"></span>Design</div>
-      <div class="rings-legend-item"><span class="rings-legend-dot" style="background:#ef4444"></span>Content</div>
-      <div class="rings-legend-item"><span class="rings-legend-dot" style="background:#f59e0b"></span>Dev</div>
-      <div class="rings-legend-item"><span class="rings-legend-dot" style="background:#8b5cf6"></span>Sanity</div>
-      <div class="rings-legend-item"><span class="rings-legend-dot" style="background:#10b981"></span>SEO</div>
-      <div class="rings-legend-item"><span class="rings-legend-dot" style="background:#0ea5e9"></span>Created</div>
+    <div class="rings-legend" style="grid-template-columns: 1fr;">
+      <div class="rings-legend-item"><span class="rings-legend-dot" style="background:#10b981"></span>Phase 1</div>
+      <div class="rings-legend-item"><span class="rings-legend-dot" style="background:#3b82f6"></span>Phase 2</div>
+      <div class="rings-legend-item"><span class="rings-legend-dot" style="background:#f59e0b"></span>Phase 3</div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════ -->
-<!-- SECTION 1: MAIN WEBSITE SITEMAP -->
-<!-- ═══════════════════════════════════════ -->
+<!-- ============================================ -->
+<!-- PROJECT SCOPE & MILESTONES -->
+<!-- ============================================ -->
+
+<div class="section">
+  <div class="section-label">🚀 Project Scope &amp; Milestones</div>
+
+  <div class="note" style="margin-bottom: 24px;">
+    <strong>Engagement:</strong> Slice Beer Co website, Figma brand library, and Sanity build (Forefathers Group).&nbsp;
+    <strong>Timeline:</strong> estimated 6 weeks from a July 2026 start (the proposal sets no fixed timeline).
+    <br><br>
+    A custom Next.js site with Sanity CMS, Square commerce, and an Untappd-powered tap list, built fresh for SEO and AEO. The four proposal payment milestones are grouped into three delivery phases below.
+    <strong>Current status: Phase 1 in progress (discovery and design).</strong>
+  </div>
+
+  <div class="columns">
+
+    <div class="column">
+      <div class="group-box" data-phase="1" data-active="true">
+        <div class="group-label">Phase 1 — Discovery &amp; Design</div>
+        <div class="node" style="margin-top: 8px;">
+          <div class="node-desc">Milestones 01 + 02 · Discovery and design · Est. 2 weeks</div>
+          <div class="status-bar">
+            <span class="status-pill in-progress phase-status"><span class="pill-icon">◐</span> In Progress</span>
+          </div>
+          <ul class="check-list">
+            <li><label class="check-item"><input type="checkbox" class="phase-check" id="p1-1"><span class="check-box"></span><span class="check-label">Project kickoff and discovery</span></label></li>
+            <li><label class="check-item"><input type="checkbox" class="phase-check" id="p1-2"><span class="check-box"></span><span class="check-label">Content gathering and asset collection</span></label></li>
+            <li><label class="check-item"><input type="checkbox" class="phase-check" id="p1-3"><span class="check-box"></span><span class="check-label">Site architecture and sitemap planning</span></label></li>
+            <li><label class="check-item"><input type="checkbox" class="phase-check" id="p1-4"><span class="check-box"></span><span class="check-label">Brand discovery</span></label></li>
+            <li><label class="check-item"><input type="checkbox" class="phase-check" id="p1-5"><span class="check-box"></span><span class="check-label">Figma brand library (color, type, components)</span></label></li>
+            <li><label class="check-item"><input type="checkbox" class="phase-check" id="p1-6"><span class="check-box"></span><span class="check-label">Desktop and mobile website design</span></label></li>
+            <li><label class="check-item"><input type="checkbox" class="phase-check" id="p1-7"><span class="check-box"></span><span class="check-label">Component system and UI toolkit</span></label></li>
+            <li><label class="check-item"><input type="checkbox" class="phase-check" id="p1-8"><span class="check-box"></span><span class="check-label">Final design approval</span></label></li>
+          </ul>
+          <div class="phase-progress">
+            <div class="phase-progress-head"><span>Phase progress</span><span class="phase-progress-pct">0%</span></div>
+            <div class="phase-progress-track"><div class="phase-progress-fill"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="group-box" data-phase="2">
+        <div class="group-label">Phase 2 — Development &amp; Integration</div>
+        <div class="node" style="margin-top: 8px;">
+          <div class="node-desc">Milestone 03 · Build and integrations · Est. 3 weeks</div>
+          <div class="status-bar">
+            <span class="status-pill not-started phase-status"><span class="pill-icon">○</span> Not Started</span>
+          </div>
+          <ul class="check-list">
+            <li><label class="check-item"><input type="checkbox" class="phase-check" id="p2-1"><span class="check-box"></span><span class="check-label">Responsive Next.js front-end build</span></label></li>
+            <li><label class="check-item"><input type="checkbox" class="phase-check" id="p2-2"><span class="check-box"></span><span class="check-label">Sanity CMS setup and content models</span></label></li>
+            <li><label class="check-item"><input type="checkbox" class="phase-check" id="p2-3"><span class="check-box"></span><span class="check-label">Square catalog integration (products, inventory)</span></label></li>
+            <li><label class="check-item"><input type="checkbox" class="phase-check" id="p2-4"><span class="check-box"></span><span class="check-label">Square cart and checkout integration</span></label></li>
+            <li><label class="check-item"><input type="checkbox" class="phase-check" id="p2-5"><span class="check-box"></span><span class="check-label">Untappd tap list integration</span></label></li>
+            <li><label class="check-item"><input type="checkbox" class="phase-check" id="p2-6"><span class="check-box"></span><span class="check-label">SEO and AEO implementation (schema, metadata)</span></label></li>
+            <li><label class="check-item"><input type="checkbox" class="phase-check" id="p2-7"><span class="check-box"></span><span class="check-label">Responsive optimization and QA</span></label></li>
+          </ul>
+          <div class="phase-progress">
+            <div class="phase-progress-head"><span>Phase progress</span><span class="phase-progress-pct">0%</span></div>
+            <div class="phase-progress-track"><div class="phase-progress-fill"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="group-box" data-phase="3">
+        <div class="group-label">Phase 3 — Launch &amp; Handoff</div>
+        <div class="node" style="margin-top: 8px;">
+          <div class="node-desc">Milestone 04 · Launch and handoff · Est. 1 week</div>
+          <div class="status-bar">
+            <span class="status-pill not-started phase-status"><span class="pill-icon">○</span> Not Started</span>
+          </div>
+          <ul class="check-list">
+            <li><label class="check-item"><input type="checkbox" class="phase-check" id="p3-1"><span class="check-box"></span><span class="check-label">Final content population in Sanity</span></label></li>
+            <li><label class="check-item"><input type="checkbox" class="phase-check" id="p3-2"><span class="check-box"></span><span class="check-label">Launch preparation and deployment</span></label></li>
+            <li><label class="check-item"><input type="checkbox" class="phase-check" id="p3-3"><span class="check-box"></span><span class="check-label">Final testing and QA pass</span></label></li>
+            <li><label class="check-item"><input type="checkbox" class="phase-check" id="p3-4"><span class="check-box"></span><span class="check-label">Client training</span></label></li>
+            <li><label class="check-item"><input type="checkbox" class="phase-check" id="p3-5"><span class="check-box"></span><span class="check-label">Project handoff</span></label></li>
+          </ul>
+          <div class="phase-progress">
+            <div class="phase-progress-head"><span>Phase progress</span><span class="phase-progress-pct">0%</span></div>
+            <div class="phase-progress-track"><div class="phase-progress-fill"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr>
 
 <div class="section">
   <div class="section-label">🏠 Slice Beer Co — Website Sitemap</div>
@@ -1947,24 +2077,25 @@
 <!-- SUMMARY -->
 <!-- ═══════════════════════════════════════ -->
 
+<!-- ============================================ -->
+
 <div class="center">
-  <div class="page-count">Total Pages at Launch: 21 pages &nbsp;·&nbsp; 126 status items to track (21 pages × 6 categories) &nbsp;·&nbsp; 13 core + 8 SEO/AEO landing</div>
+  <div class="page-count">21 pages tracked &nbsp;·&nbsp; 126 status items across 6 categories (13 core + 8 SEO/AEO landing)</div>
 </div>
 
 <div style="height: 24px;"></div>
 
-<!-- ═══════════════════════════════════════ -->
+<!-- ============================================ -->
 <!-- HOW THIS TRACKER WORKS -->
-<!-- ═══════════════════════════════════════ -->
+<!-- ============================================ -->
 
 <div class="note" style="margin: 0 auto; max-width: 860px;">
   <strong>How This Tracker Works:</strong><br><br>
-  <strong>1. Status updates:</strong> When a page category is completed, tell Claude which page and which category (Design, Dev, SEO, Content, Sanity) to mark as complete. Claude will update the pill from ○ Not Started → ✓ Completed and recalculate progress bars.<br><br>
-  <strong>2. Git workflow:</strong> After each update, save the updated HTML and push to the Git repo so the client always sees current status.<br><br>
-  <strong>3. SEO/AEO pages:</strong> Additional landing pages can be added to Section 2 as keyword research identifies new opportunities.<br><br>
-  <strong>4. Blog articles:</strong> Individual blog post pages are not tracked here — they're self-explanatory and managed through Sanity. The /blog listing page itself IS tracked.<br><br>
-  <strong>5. Knowledge base:</strong> Section 4 (Master Knowledge Base) serves as the single source of truth for all content creation across the site. Update as new information becomes available.<br><br>
-  <strong>6. Content section structure:</strong> Each page in Section 3 follows this box hierarchy — <strong style="color:#059669;">Green SEO/AEO box</strong>: metadata (title, description, keywords, schema, AEO targets). <strong style="color:#0369a1;">Blue Content Created box</strong>: all 📌 Module copy blocks live here once content is written and approved. Purpose sits above both boxes as plain text. Never put module content outside the blue box.
+  <strong>1. Phases:</strong> Work is delivered in 3 milestone phases. The phase pill shows where the project is today; the overall donut is the weighted total across all phases.<br><br>
+  <strong>2. Editing:</strong> Open the live URL with <code>#edit</code> on the end to tick milestone checkboxes, then click <strong>Copy progress</strong> and paste it to Claude to publish. The plain URL stays read-only for the client.<br><br>
+  <strong>3. Status updates:</strong> To mark a page category done (Design, Dev, SEO, Content, Sanity, Created), tell Claude the page and category. Claude flips the pill ○ → ◐ → ✓ and the progress recalculates automatically.<br><br>
+  <strong>4. Content strategy:</strong> Each page in the content section uses the box hierarchy — plain-text Purpose on top, then the <strong style="color:#059669;">green SEO/AEO box</strong>, then the <strong style="color:#0369a1;">blue Content Created box</strong>. The two boxes are siblings, never nested.<br><br>
+  <strong>5. Progress:</strong> Never remove progress already marked complete. Progress only moves forward unless you say to reset.
 </div>
 
 <!-- ═══════════════════════════════════════ -->
@@ -1973,9 +2104,9 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    var fills = document.querySelectorAll('.progress-fill');
+    // Generic bars only; the phase (.obar) bars are driven by the milestone module.
+    var fills = document.querySelectorAll('.progress-fill:not(.obar)');
     fills.forEach(function(fill) {
-      // Respect data-target if already set in markup; otherwise read from inline style
       var target = fill.getAttribute('data-target') || fill.style.width;
       fill.setAttribute('data-target', target);
       fill.style.width = '0%';
@@ -2010,42 +2141,9 @@
     }
   })();
 
-  // ── Ring chart animation ──
-  document.addEventListener('DOMContentLoaded', function() {
-    var ringIds   = ['ring-design','ring-dev','ring-seo','ring-content','ring-sanity','ring-created'];
-    var ringRadii = [15, 25, 35, 45, 55, 65];
-    var fills     = document.querySelectorAll('.progress-fill');
-
-    // Overall %
-    var total = 0;
-    fills.forEach(function(f) {
-      total += parseFloat(f.getAttribute('data-target') || f.style.width) || 0;
-    });
-    var pctEl = document.getElementById('pieOverallPct');
-    if (pctEl) pctEl.textContent = Math.round(total / (fills.length || 1)) + '%';
-
-    // Init rings: set dasharray = full circumference, offset = full (hidden)
-    ringIds.forEach(function(id, i) {
-      var el = document.getElementById(id);
-      if (!el) return;
-      var circ = +(2 * Math.PI * ringRadii[i]).toFixed(2);
-      el.style.strokeDasharray  = circ + ' ' + circ;
-      el.style.strokeDashoffset = circ;
-    });
-
-    // Staggered animated fill via stroke-dashoffset
-    setTimeout(function() {
-      fills.forEach(function(fill, i) {
-        if (i >= ringIds.length) return;
-        setTimeout(function() {
-          var pct  = parseFloat(fill.getAttribute('data-target')) || 0;
-          var circ = +(2 * Math.PI * ringRadii[i]).toFixed(2);
-          var el   = document.getElementById(ringIds[i]);
-          if (el) el.style.strokeDashoffset = (circ * (1 - pct / 100)).toFixed(2);
-        }, i * 200);
-      });
-    }, 120);
-  });
+  // ── Ring chart ──
+  // The 3 phase rings + phase bars + centre % are all driven by the milestone
+  // module below (updateOverall). Nothing to init here.
 
 
   // ── Anchor link navigation ──
@@ -2070,6 +2168,159 @@
       }
     });
   });
+
+  // ── Milestone checklists ──────────────────────────────────────
+  // Source of truth = committed markup (checkbox `checked` attributes).
+  // Client on the plain URL sees read-only boxes. Adding #edit to the URL
+  // unlocks clicking; edits persist to THIS browser's localStorage only,
+  // and publish to the client when the file is pushed.
+  (function() {
+    var LS_KEY = 'sliceBeerPhaseChecks';
+    var EDIT = /(?:^|[#&])edit(?:$|[&=])/.test(location.hash) || location.hash === '#edit';
+    var checks = Array.prototype.slice.call(document.querySelectorAll('.phase-check'));
+    if (!checks.length) return;
+
+    function loadStore() {
+      try { return JSON.parse(localStorage.getItem(LS_KEY)) || {}; }
+      catch (e) { return {}; }
+    }
+    function saveStore(store) {
+      try { localStorage.setItem(LS_KEY, JSON.stringify(store)); } catch (e) {}
+    }
+
+    // Enable editing + apply saved overrides only in edit mode
+    if (EDIT) {
+      document.body.classList.add('edit-mode');
+      var store = loadStore();
+      checks.forEach(function(cb) {
+        if (Object.prototype.hasOwnProperty.call(store, cb.id)) cb.checked = !!store[cb.id];
+      });
+    } else {
+      // Client view: read-only, always reflects committed markup
+      checks.forEach(function(cb) { cb.disabled = true; });
+    }
+
+    function setPill(pill, state, label) {
+      if (!pill) return;
+      var icon = state === 'completed' ? '✓' : (state === 'in-progress' ? '◐' : '○');
+      pill.className = 'status-pill ' + state + ' phase-status';
+      pill.innerHTML = '<span class="pill-icon">' + icon + '</span> ' + label;
+    }
+
+    function refreshPhase(box) {
+      var boxes = box.querySelectorAll('.phase-check');
+      var total = boxes.length;
+      var done = 0;
+      boxes.forEach(function(cb) { if (cb.checked) done++; });
+      var pct = total ? Math.round(done / total * 100) : 0;
+
+      var fill = box.querySelector('.phase-progress-fill');
+      var pctEl = box.querySelector('.phase-progress-pct');
+      if (fill) fill.style.width = pct + '%';
+      if (pctEl) pctEl.textContent = pct + '%';
+
+      var pill = box.querySelector('.phase-status');
+      var active = box.getAttribute('data-active') === 'true';
+      if (done === total && total > 0) setPill(pill, 'completed', 'Completed');
+      else if (done > 0 || active)     setPill(pill, 'in-progress', 'In Progress');
+      else                             setPill(pill, 'not-started', 'Not Started');
+    }
+
+    // Overall project progress = phase completion weighted by phase length
+    // (Phase 1 = 2wk, Phase 2 = 3wk, Phase 3 = 1wk). Drives the donut centre.
+    var PHASE_WEIGHTS = { '1': 2, '2': 3, '3': 1 };
+
+    // Hide the 3 overall rings up front so they animate in (no full-ring flash)
+    ['1', '2', '3'].forEach(function(p) {
+      var ring = document.getElementById('oring-' + p);
+      if (!ring) return;
+      var circ = 2 * Math.PI * (+ring.getAttribute('r'));
+      ring.style.strokeDasharray  = circ.toFixed(2) + ' ' + circ.toFixed(2);
+      ring.style.strokeDashoffset = circ.toFixed(2);
+    });
+
+    // Overall widget = per-phase completion (colored bars + donut rings),
+    // with the centre number weighted by phase length. Each is driven live.
+    function updateOverall() {
+      var boxes = document.querySelectorAll('[data-phase]');
+      var acc = 0, wSum = 0;
+      boxes.forEach(function(box) {
+        var p = box.getAttribute('data-phase');
+        var w = PHASE_WEIGHTS[p] || 1;
+        var items = box.querySelectorAll('.phase-check');
+        var done = 0;
+        items.forEach(function(cb) { if (cb.checked) done++; });
+        var frac = items.length ? done / items.length : 0;
+        acc += frac * w; wSum += w;
+
+        var pctTxt = Math.round(frac * 100) + '%';
+        var bar = document.getElementById('obar-' + p);
+        var pctEl = document.getElementById('opct-' + p);
+        if (bar) bar.style.width = pctTxt;
+        if (pctEl) pctEl.textContent = pctTxt;
+
+        var ring = document.getElementById('oring-' + p);
+        if (ring) {
+          var circ = 2 * Math.PI * (+ring.getAttribute('r'));
+          ring.style.strokeDashoffset = (circ * (1 - frac)).toFixed(2);
+        }
+      });
+      var el = document.getElementById('pieOverallPct');
+      if (el) el.textContent = (wSum ? Math.round(acc / wSum * 100) : 0) + '%';
+    }
+
+    var phaseBoxes = Array.prototype.slice.call(document.querySelectorAll('[data-phase]'));
+
+    // Animate phase bars in on load
+    phaseBoxes.forEach(function(box) {
+      var fill = box.querySelector('.phase-progress-fill');
+      if (fill) fill.style.width = '0%';
+    });
+    setTimeout(function() { phaseBoxes.forEach(refreshPhase); updateOverall(); }, 650);
+
+    // Handle edits
+    checks.forEach(function(cb) {
+      cb.addEventListener('change', function() {
+        if (!EDIT) return;
+        var store = loadStore();
+        store[cb.id] = cb.checked;
+        saveStore(store);
+        var box = cb.closest('[data-phase]');
+        if (box) refreshPhase(box);
+        updateOverall();
+      });
+    });
+
+    // Copy-progress helper (edit mode) — hand the state to Claude to commit
+    var copyBtn = document.getElementById('copyProgressBtn');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', function() {
+        var lines = ['Slice Beer Co milestone progress — paste to Claude to publish:', ''];
+        phaseBoxes.forEach(function(box) {
+          var label = box.querySelector('.group-label');
+          var items = box.querySelectorAll('.phase-check');
+          var done = 0; items.forEach(function(cb){ if (cb.checked) done++; });
+          lines.push((label ? label.textContent.trim() : 'Phase') + '  (' + done + '/' + items.length + ')');
+          items.forEach(function(cb) {
+            var txt = cb.parentNode.querySelector('.check-label');
+            lines.push('  [' + (cb.checked ? 'x' : ' ') + '] ' + cb.id + ' — ' + (txt ? txt.textContent.trim() : ''));
+          });
+          lines.push('');
+        });
+        var out = lines.join('\n');
+        function done() {
+          var orig = copyBtn.textContent;
+          copyBtn.textContent = 'Copied ✓';
+          setTimeout(function(){ copyBtn.textContent = orig; }, 1600);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(out).then(done, function(){ window.prompt('Copy progress:', out); });
+        } else {
+          window.prompt('Copy progress:', out);
+        }
+      });
+    }
+  })();
 
 </script>
 
