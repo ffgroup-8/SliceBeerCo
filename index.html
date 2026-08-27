@@ -1068,7 +1068,7 @@
     <p class="sitemap-title">Slice Beer Co</p>
     <h1 class="sitemap-subtitle">Sitemap &amp; Project Status Tracker</h1>
     <p class="sitemap-date">Last updated: August 27, 2026</p>
-    <p class="sitemap-update">↳ Phase 1 discovery milestones complete (4/8); homepage design done</p>
+    <p class="sitemap-update">↳ Nav reworked: FAQ merged into How We Brew + Contact, Visit renamed Locations, Our Beer + About combined into How We Brew</p>
   </div>
 
 
@@ -1265,10 +1265,7 @@
 
     <!-- NAV ROW -->
     <div class="nav-row">
-      <div class="nav-item">BEER 🔽<div class="nav-desc">On Tap · Our Beer</div></div>
-      <div class="nav-item">VISIT 🔽<div class="nav-desc">Taproom · Catering &amp; Events</div></div>
-      <div class="nav-item">SHOP 🔽<div class="nav-desc">Shop · Products (Square)</div></div>
-      <div class="nav-item" data-anchor="cs-about">ABOUT<div class="nav-desc">Our Process / Story</div>
+      <div class="nav-item" data-anchor="cs-ontap">ON TAP<div class="nav-desc">Live Untappd tap list</div>
         <div class="status-bar">
           <span class="status-pill not-started design"><span class="pill-icon">○</span> Design</span>
           <span class="status-pill not-started dev"><span class="pill-icon">○</span> Dev</span>
@@ -1278,7 +1275,9 @@
           <span class="status-pill not-started content-created"><span class="pill-icon">○</span> Created</span>
         </div>
       </div>
-      <div class="nav-item" data-anchor="cs-faq">FAQ<div class="nav-desc">Hours, dogs, food, parking</div>
+      <div class="nav-item">LOCATIONS 🔽<div class="nav-desc">Locations · Catering &amp; Events</div></div>
+      <div class="nav-item">SHOP 🔽<div class="nav-desc">Shop · Products (Square)</div></div>
+      <div class="nav-item" data-anchor="cs-howwebrew">HOW WE BREW<div class="nav-desc">Process, story &amp; team</div>
         <div class="status-bar">
           <span class="status-pill not-started design"><span class="pill-icon">○</span> Design</span>
           <span class="status-pill not-started dev"><span class="pill-icon">○</span> Dev</span>
@@ -1305,54 +1304,15 @@
     <!-- COLUMNS -->
     <div class="columns">
 
-      <!-- ── BEER GROUP ── -->
+      <!-- ── LOCATIONS GROUP ── -->
       <div class="column">
         <div class="group-box">
-          <div class="group-label">Beer (Dropdown)</div>
+          <div class="group-label">Locations (Dropdown)</div>
 
-          <div class="node" style="margin-top: 8px;" data-anchor="cs-ontap">
-            <div class="node-title">On Tap <span class="badge">FLAGSHIP</span></div>
-            <div class="node-desc">Live Untappd tap list. What's pouring now, styles, ABV. The page that earns repeat visits.</div>
-            <div class="node-url">/on-tap</div>
-            <span class="tag flagship">Flagship</span>
-            <div class="status-bar">
-              <span class="status-pill not-started design"><span class="pill-icon">○</span> Design</span>
-              <span class="status-pill not-started dev"><span class="pill-icon">○</span> Dev</span>
-              <span class="status-pill completed seo-tag"><span class="pill-icon">✓</span> SEO</span>
-              <span class="status-pill not-started content"><span class="pill-icon">○</span> Content</span>
-              <span class="status-pill not-started sanity"><span class="pill-icon">○</span> Sanity</span>
-              <span class="status-pill not-started content-created"><span class="pill-icon">○</span> Created</span>
-            </div>
-          </div>
-          <div class="connector"></div>
-
-          <div class="node" data-anchor="cs-beer">
-            <div class="node-title">Our Beer</div>
-            <div class="node-desc">Beer philosophy, West Coast and Hazy IPA focus, flagship Original Juice, rotating program.</div>
-            <div class="node-url">/beer</div>
-            <span class="tag service">Brand</span>
-            <div class="status-bar">
-              <span class="status-pill not-started design"><span class="pill-icon">○</span> Design</span>
-              <span class="status-pill not-started dev"><span class="pill-icon">○</span> Dev</span>
-              <span class="status-pill completed seo-tag"><span class="pill-icon">✓</span> SEO</span>
-              <span class="status-pill not-started content"><span class="pill-icon">○</span> Content</span>
-              <span class="status-pill not-started sanity"><span class="pill-icon">○</span> Sanity</span>
-              <span class="status-pill not-started content-created"><span class="pill-icon">○</span> Created</span>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- ── VISIT GROUP ── -->
-      <div class="column">
-        <div class="group-box">
-          <div class="group-label">Visit (Dropdown)</div>
-
-          <div class="node" style="margin-top: 8px;" data-anchor="cs-taproom">
-            <div class="node-title">Taproom <span class="badge">FLAGSHIP</span></div>
+          <div class="node" style="margin-top: 8px;" data-anchor="cs-locations">
+            <div class="node-title">Locations <span class="badge">FLAGSHIP</span></div>
             <div class="node-desc">Hours, address, parking, dog and family friendly, outdoor seating, pizza next door. Core local-SEO page.</div>
-            <div class="node-url">/taproom</div>
+            <div class="node-url">/locations</div>
             <span class="tag flagship">Flagship</span>
             <div class="status-bar">
               <span class="status-pill not-started design"><span class="pill-icon">○</span> Design</span>
@@ -1655,7 +1615,7 @@
   <div class="section-label">📋 Page Content Strategy &amp; SEO/AEO Structure</div>
 
   <div class="note" style="margin-bottom: 24px;">
-    <strong>AEO foundations (apply site-wide):</strong> consistent NAP on every page (Slice Beer Co · 665 6th Street, Lincoln, CA 95648 · (916) 408-6889 · beer@slicebeer.com), LocalBusiness/Brewery schema with geo + openingHours, FAQPage schema on FAQ and key pages, entity links to Lincoln, Placer County, Roseville, Rocklin, and Sacramento, and clear question-and-answer copy blocks so AI assistants can quote Slice directly. Service area for catering and events: Lincoln, Rocklin, Roseville, Loomis, Auburn, Granite Bay, and greater Sacramento.
+    <strong>AEO foundations (apply site-wide):</strong> consistent NAP on every page (Slice Beer Co · 665 6th Street, Lincoln, CA 95648 · (916) 408-6889 · beer@slicebeer.com), LocalBusiness/Brewery schema with geo + openingHours, FAQPage schema on How We Brew, Contact, and key pages, entity links to Lincoln, Placer County, Roseville, Rocklin, and Sacramento, and clear question-and-answer copy blocks so AI assistants can quote Slice directly. Service area for catering and events: Lincoln, Rocklin, Roseville, Loomis, Auburn, Granite Bay, and greater Sacramento.
   </div>
 
   <!-- ========== CORE NAV PAGES ========== -->
@@ -1700,38 +1660,38 @@
     </div>
   </div>
 
-  <div class="content-section" id="cs-beer">
-    <div class="content-section-title">🌿 Our Beer</div>
-    <div class="content-section-url">/beer</div>
-    <p><strong>Purpose:</strong> Explain the beer philosophy and styles, anchor the flagship Original Juice, and build topical authority around West Coast and hazy IPA.</p>
+  <div class="content-section" id="cs-howwebrew">
+    <div class="content-section-title">📖 How We Brew (About + Team)</div>
+    <div class="content-section-url">/how-we-brew</div>
+    <p><strong>Purpose:</strong> The combined About page. Merges the old Our Beer and About pages into one story: founding, on-site hop farm, small-batch process, the West Coast and hazy IPA philosophy, flagship Original Juice, and a team section. Also carries brand-level FAQs folded in from the retired FAQ page, with FAQPage schema for AEO.</p>
 
     <div class="seo-box">
       <div class="seo-box-title">SEO / AEO Strategy</div>
-      <p><strong>SEO Title:</strong> West Coast &amp; Hazy IPAs | Slice Beer Co, Lincoln CA</p>
-      <p><strong>Meta Description:</strong> Meet Slice Beer Co beer: hop-forward West Coast IPAs, juicy hazy IPAs, and our flagship Original Juice, all brewed fresh in Lincoln, CA.</p>
-      <p><strong>Primary Keywords:</strong> West Coast IPA, hazy IPA, Original Juice IPA, hop forward beer Lincoln, Slice Beer styles</p>
-      <p><strong>Schema:</strong> Brewery, Product (flagship and recurring beers)</p>
-      <p><strong>AEO Targets:</strong> "What kind of beer does Slice Beer Co make?" · "What is Original Juice IPA?"</p>
+      <p><strong>SEO Title:</strong> How We Brew | Story, Process &amp; Team | Slice Beer Co</p>
+      <p><strong>Meta Description:</strong> How Slice Beer Co brews fresh West Coast and hazy IPAs in Lincoln, CA. Our story, on-site hop farm, small-batch process, and the team behind the beer.</p>
+      <p><strong>Primary Keywords:</strong> how Slice Beer is made, Lincoln brewery story, West Coast and hazy IPA process, hop farm brewery, Slice Beer team, Zach Frasher Russ Yeager</p>
+      <p><strong>Schema:</strong> AboutPage, Organization, Person (founders and team), FAQPage</p>
+      <p><strong>AEO Targets:</strong> "How does Slice Beer Co make its beer?" · "Who owns Slice Beer Co?" · "Does Slice Beer Co grow its own hops?" · "What styles does Slice Beer Co brew?"</p>
     </div>
 
     <div class="content-created-box">
       <div class="content-created-box-title">Content Created</div>
-      <p>Module copy pending. Confirm flagship and recurring beer lineup with client before drafting.</p>
+      <p>Module copy pending. Merges Our Beer + About. Sections to draft: brand story, brewing process, West Coast and hazy IPA philosophy, flagship Original Juice, on-site hop farm, and a team section. Verify founder and team bios with client before publishing.</p>
     </div>
   </div>
 
-  <div class="content-section" id="cs-taproom">
-    <div class="content-section-title">📍 Taproom</div>
-    <div class="content-section-url">/taproom</div>
-    <p><strong>Purpose:</strong> The core local-SEO page. Carry full NAP, hours, parking, and amenities (outdoor seating, dog and family friendly, pizza next door) so Slice wins the Lincoln map pack and "near me" queries.</p>
+  <div class="content-section" id="cs-locations">
+    <div class="content-section-title">📍 Locations</div>
+    <div class="content-section-url">/locations</div>
+    <p><strong>Purpose:</strong> The core local-SEO page (formerly Taproom). Carry full NAP, hours, parking, and amenities (outdoor seating, dog and family friendly, pizza next door) so Slice wins the Lincoln map pack and "near me" queries. Structured as Locations to scale if a second site is ever added.</p>
 
     <div class="seo-box">
       <div class="seo-box-title">SEO / AEO Strategy</div>
-      <p><strong>SEO Title:</strong> Taproom in Lincoln, CA | Hours &amp; Visit | Slice Beer Co</p>
-      <p><strong>Meta Description:</strong> Visit the Slice Beer Co taproom at 665 6th Street, Lincoln, CA. See hours, parking, outdoor seating, dog and family friendly, pizza next door.</p>
-      <p><strong>Primary Keywords:</strong> Slice Beer taproom, brewery Lincoln CA hours, taproom near me, dog friendly brewery Lincoln, outdoor patio brewery</p>
+      <p><strong>SEO Title:</strong> Visit Us in Lincoln, CA | Location &amp; Hours | Slice Beer</p>
+      <p><strong>Meta Description:</strong> Visit Slice Beer Co at 665 6th Street, Lincoln, CA. Taproom hours, parking, outdoor seating, dog and family friendly, with pizza next door.</p>
+      <p><strong>Primary Keywords:</strong> Slice Beer taproom, brewery Lincoln CA hours, brewery near me, dog friendly brewery Lincoln, outdoor patio brewery, Slice Beer location</p>
       <p><strong>Schema:</strong> Brewery / LocalBusiness (address, geo, openingHoursSpecification, telephone), Place</p>
-      <p><strong>AEO Targets:</strong> "What are Slice Beer Co hours?" · "Where is Slice Beer Co located?" · "Is Slice Beer Co dog friendly?"</p>
+      <p><strong>AEO Targets:</strong> "What are Slice Beer Co hours?" · "Where is Slice Beer Co located?" · "Is Slice Beer Co dog friendly?" · "Is there parking at Slice Beer Co?"</p>
     </div>
 
     <div class="content-created-box">
@@ -1780,63 +1740,23 @@
     </div>
   </div>
 
-  <div class="content-section" id="cs-about">
-    <div class="content-section-title">📖 About / Our Process</div>
-    <div class="content-section-url">/about</div>
-    <p><strong>Purpose:</strong> Tell the founding story, the on-site hop farm, and the small-batch process. Builds brand trust and entity signals (founders, history) that AI assistants cite.</p>
-
-    <div class="seo-box">
-      <div class="seo-box-title">SEO / AEO Strategy</div>
-      <p><strong>SEO Title:</strong> Our Story &amp; Brewing Process | Slice Beer Co, Lincoln</p>
-      <p><strong>Meta Description:</strong> Founded in 2019 in Lincoln, CA, Slice Beer Co is a small brewery with an on-site hop farm and a culture of fresh. Meet the team and our process.</p>
-      <p><strong>Primary Keywords:</strong> Slice Beer Co story, Lincoln brewery founders, small batch brewery Placer County, hop farm brewery, about Slice Beer</p>
-      <p><strong>Schema:</strong> AboutPage, Organization, Person (founders)</p>
-      <p><strong>AEO Targets:</strong> "Who owns Slice Beer Co?" · "When did Slice Beer Co open?" · "Does Slice Beer Co grow its own hops?"</p>
-    </div>
-
-    <div class="content-created-box">
-      <div class="content-created-box-title">Content Created</div>
-      <p>Module copy pending. Verify founder bios and any history details with client before publishing.</p>
-    </div>
-  </div>
-
-  <div class="content-section" id="cs-faq">
-    <div class="content-section-title">❓ FAQ</div>
-    <div class="content-section-url">/faq</div>
-    <p><strong>Purpose:</strong> Answer the highest-volume practical questions in clean Q&amp;A form. This is the single biggest AEO lever: FAQPage schema feeds direct answers to Google and AI assistants.</p>
-
-    <div class="seo-box">
-      <div class="seo-box-title">SEO / AEO Strategy</div>
-      <p><strong>SEO Title:</strong> FAQ | Hours, Dogs, Food &amp; Parking | Slice Beer Co</p>
-      <p><strong>Meta Description:</strong> Answers about Slice Beer Co: hours, dog and kid policy, food and pizza, parking, growlers, and online orders at our Lincoln, CA taproom.</p>
-      <p><strong>Primary Keywords:</strong> Slice Beer Co FAQ, is Slice Beer dog friendly, does Slice Beer have food, Lincoln brewery parking, Slice Beer hours</p>
-      <p><strong>Schema:</strong> FAQPage (priority), Brewery</p>
-      <p><strong>AEO Targets:</strong> "Does Slice Beer Co serve food?" · "Can I bring my dog to Slice Beer Co?" · "Is Slice Beer Co kid friendly?" · "Is there parking at Slice Beer Co?"</p>
-    </div>
-
-    <div class="content-created-box">
-      <div class="content-created-box-title">Content Created</div>
-      <p>Module copy pending. Draft the question set first (hours, dogs, food/pizza, kids, parking, growlers, pickup, age policy), then confirm answers with client.</p>
-    </div>
-  </div>
-
   <div class="content-section" id="cs-contact">
     <div class="content-section-title">✉️ Contact</div>
     <div class="content-section-url">/contact</div>
-    <p><strong>Purpose:</strong> Primary CTA destination. Provide NAP, directions, hours, and an inquiry path for catering and private events.</p>
+    <p><strong>Purpose:</strong> Primary CTA destination. Provide NAP, directions, hours, and an inquiry path for catering and private events. Also absorbs the practical visit FAQs (food and pizza, dogs, parking, pickup, age policy) from the retired FAQ page, with FAQPage schema for AEO.</p>
 
     <div class="seo-box">
       <div class="seo-box-title">SEO / AEO Strategy</div>
       <p><strong>SEO Title:</strong> Contact &amp; Directions | Slice Beer Co, Lincoln CA</p>
       <p><strong>Meta Description:</strong> Get in touch with Slice Beer Co in Lincoln, CA. Find hours, directions, and our taproom at 665 6th Street. Call (916) 408-6889 or stop by.</p>
-      <p><strong>Primary Keywords:</strong> Slice Beer Co contact, brewery Lincoln CA phone, directions to Slice Beer, Slice Beer email</p>
-      <p><strong>Schema:</strong> ContactPage, LocalBusiness</p>
-      <p><strong>AEO Targets:</strong> "How do I contact Slice Beer Co?" · "What is Slice Beer Co phone number?"</p>
+      <p><strong>Primary Keywords:</strong> Slice Beer Co contact, brewery Lincoln CA phone, directions to Slice Beer, does Slice Beer have food, is Slice Beer dog friendly</p>
+      <p><strong>Schema:</strong> ContactPage, LocalBusiness, FAQPage</p>
+      <p><strong>AEO Targets:</strong> "How do I contact Slice Beer Co?" · "What is Slice Beer Co phone number?" · "Does Slice Beer Co serve food?" · "Can I bring my dog to Slice Beer Co?" · "Is there parking at Slice Beer Co?"</p>
     </div>
 
     <div class="content-created-box">
       <div class="content-created-box-title">Content Created</div>
-      <p>Module copy pending. NAP confirmed; contact form fields and catering inquiry routing to be defined.</p>
+      <p>Module copy pending. NAP confirmed; contact form fields, catering inquiry routing, and the visit-FAQ block (with answers confirmed by client) to be defined.</p>
     </div>
   </div>
 
@@ -2080,7 +2000,7 @@
 <!-- ============================================ -->
 
 <div class="center">
-  <div class="page-count">21 pages tracked &nbsp;·&nbsp; 126 status items across 6 categories (13 core + 8 SEO/AEO landing)</div>
+  <div class="page-count">19 pages tracked &nbsp;·&nbsp; 114 status items across 6 categories (11 core + 8 SEO/AEO landing)</div>
 </div>
 
 <div style="height: 24px;"></div>
